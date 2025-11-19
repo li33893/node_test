@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require("../db");
 
 
-router.get("/:flgPop", async (req, res) => {
+router.get("/list/:flgPop", async (req, res) => {
     let { flgPop } = req.params; // 这里拿到的是路径上的参数
     try {
         let sql = "SELECT * FROM TBL_BOARD B INNER JOIN TBL_USER U ON U.USERID=B.USERID";
