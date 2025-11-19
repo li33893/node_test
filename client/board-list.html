@@ -64,7 +64,7 @@
         methods: {
             fnGetList() {
                 let self = this;
-                fetch("http://localhost:3005/board/"+ self.flgPop )//注意这里
+                fetch("http://localhost:3005/board/list/"+ self.flgPop )//注意这里
                     .then(res => res.json())
                     .then(data => {
                         self.list = data.list;
