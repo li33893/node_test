@@ -4,6 +4,8 @@ const db = require("../db");
 
 
 router.get("/list/:flgPop", async (req, res) => {
+    //Express看到路由定义是/list/:flgPop就会：把url/board/list/true 和路由 /list/:flgPop 匹配
+    //发现true对应的是flgPop的位置，于是自动创建一个对象req.params = { flgPop: "true" }
     let { flgPop } = req.params; // 这里拿到的是路径上的参数
     try {
         let sql = "SELECT * FROM TBL_BOARD B INNER JOIN TBL_USER U ON U.USERID=B.USERID";
