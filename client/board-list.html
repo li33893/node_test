@@ -27,10 +27,10 @@
             제목(title), 작성자 이름(tbl_user 테이블 조인), 조회수(cnt), 작성일(cdatetime) -->
             <button @click="fnInsertBoard()">add board</button>
         </div>
-        <div>
+        <div v-if="flgPop==false">
             <button @click="fnPopular()">popular boards</button>
         </div>
-        <div>
+        <div v-else>
             <button @click="fnSeeAll()">See All</button>
         </div>
         <table>
