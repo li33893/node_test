@@ -25,12 +25,7 @@
         <div>
             <button @click="fnInsertProduct()">add product</button>
         </div>
-        <div v-if="flgPop==false">
-            <button @click="fnPopular()">Popular</button>
-        </div>
-        <div v-else>
-            <button @click="fnShowAll()">Show All</button>
-        </div>
+      
         <table>
             <tr>
                 <th>id</th>
@@ -56,11 +51,10 @@
         data() {
             return {
                 list: [],
-                flgPop:false
             };
         },
         methods: {
-            fnGetList(flgPop) {
+            fnGetList() {
                 let self = this;
                 flgPop=self.flgPop;
                 fetch("http://localhost:3005/product")//注意这里
