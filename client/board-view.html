@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <title>첫번째 페이지</title>
+</head>
+<style>
+    table,
+    tr,
+    td,
+    th {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 5px 10px;
+        text-align: center;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <!--제목, 내용(contents), 작성자 이름-->
+        <div>title:{{board.title}}</div>
+        <div>contents:{{board.contents}}</div>
+        <div>userName:{{board.userName}}</div>
+        <div><button @click="fnRemove(board.boardNo)">delete</button></div>
+        <div><button @click="fnEdit(board.boardNo)">edit</button></div>
+    </div>
+</body>
+
+</html>
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                board: {},//换掉
+                boardNo:"",//加这个
+            };
+        },
+        methods: {
+            fnGetList() {
+                let self = this;
+                fetch("http://localhost:3005/board/"+self.boardNo)//换词,加这个(别忘了product后面的'/'')
+                    .then(res => res.json())
+                    .then(data => {
+                        self.board = data.board;//改
+                        self.boardNo=data.board.boardNo;
+                        self.fnUpdateCnt();
+                    })
+            },
+
+            fnRemove(){
+                let self = this;
+                fetch("http://localhost:3005/board/"+self.boardNo,
+                    {
+                        method:"DELETE"
+                    }
+                )
+                    .then(res => res.json())
+                    .then(data => {
+                        alert("deleted");
+                        location.href="board-list.html";
+                    })
+            },
+
+            fnUpdateCnt(){
+                let self=this;
+                fetch("http://localhost:3005/board/cnt/"+self.boardNo,
+                    {
+                        method:"PUT",
+                        headers:{
+                            "Content-type":"application/json"
+                        },
+                    }
+                )
+                    .then(res => res.json())
+                    .then(data => {
+                    })
+            },
+
+            fnEdit:function(){
+                location.href="board-edit.html?boardNo="+this.boardNo;
+            }
+        },  // ← methods结束正确位置
+
+        mounted() {
+            var self = this;
+            const queryParams = new URLSearchParams(window.location.search);
+            this.boardNo = queryParams.get('boardNo') || '';
+            self.fnGetList();
+        }
+    });
+    app.mount('#app');
+</script>

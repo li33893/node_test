@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <title>첫번째 페이지</title>
+</head>
+<style>
+    table,
+    tr,
+    td,
+    th {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 5px 10px;
+        text-align: center;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <!--
+        5. 1번 화면에서 최상단에 '글쓰기' 버튼을 만들고 클릭 시 해당 페이지로 이동
+ 조건 1. 글쓰기 페이지 파일 명 : board-add.html
+ 조건 2. 제목, 내용 입력 후 '저장' 버튼 클릭 시 게시글 내용 저장
+ 조건 3. 저장 시 조회수는 0, cdatetime과 udatetime은 현재 시간, userId는 'user001'로 하드코딩할 것
+ 조건 4. 글쓰기 서버 호출 주소 : /board, post 메소드로 호출할 것
+ 
+ 제출 : 핵심 화면 캡처 1장, board-edit.html-->
+        <div>
+            <div>
+                title : <input v-model="title">
+            </div>
+            <div>
+                contents : <input v-model="contents">
+            </div>
+            <button @click="fnAdd">저장</button>
+        </div>
+    </div>
+</body>
+
+</html>
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                // list: [],
+                title: "",
+                contents: "",
+            };
+        },
+        methods: {
+
+            fnAdd() {
+                let self = this;
+                let param = {
+                    title: self.title,
+                    contents: self.contents,
+                }
+                fetch("http://localhost:3005/board", {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json"
+                    },
+                    body: JSON.stringify(param),
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        alert("추가되었습니다.")
+                        location.href = "board-list.html";
+                    })
+            }
+        },
+        mounted() {
+            var self = this;
+         
+        }
+    });
+    app.mount('#app');
+</script>

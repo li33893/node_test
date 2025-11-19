@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <title>첫번째 페이지</title>
+</head>
+<style>
+    table,
+    tr,
+    td,
+    th {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 5px 10px;
+        text-align: center;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div>
+            <!--출력 컬럼 : 
+            제목(title), 작성자 이름(tbl_user 테이블 조인), 조회수(cnt), 작성일(cdatetime) -->
+            <button @click="fnInsertBoard()">add board</button>
+        </div>
+        <div>
+            <button @click="fnPopular()">popular boards</button>
+        </div>
+        <div>
+            <button @click="fnSeeAll()">See All</button>
+        </div>
+        <table>
+            <tr>
+                <th>title</th>
+                <th>user name</th>
+                <th>cnt</th>
+                <th>cdatetime</th>
+            </tr>
+            <tr v-for="board in list">
+                <td>
+                    <a :href="'board-view.html?boardNo='+board.boardNo">{{board.title}}</a>
+                </td><!--注意传参-->
+                <td>{{board.userName}}</td>
+                <td>{{board.cnt}}</td>
+                <td>{{board.cdatetime}}</td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                list: [],
+                flgPop:false
+            };
+        },
+        methods: {
+            fnGetList() {
+                let self = this;
+                fetch("http://localhost:3005/board/"+ self.flgPop )//注意这里
+                    .then(res => res.json())
+                    .then(data => {
+                        self.list = data.list;
+                        console.log(self.list);
+                    })
+            },
+
+            fnPopular(){
+                let self=this;
+                self.flgPop=true;
+                this.fnGetList(); 
+            },
+
+            fnSeeAll(){
+                let self=this;
+                self.flgPop=false;
+                this.fnGetList(); 
+            },
+
+
+
+            fnInsertBoard:function(){
+                 location.href="board-add.html";
+        
+            }
+            
+
+            
+
+
+        },
+        mounted() {
+            var self = this;
+            self.fnGetList();
+        }
+    });
+    app.mount('#app');
+</script>

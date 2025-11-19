@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <title>첫번째 페이지</title>
+</head>
+<style>
+    table,
+    tr,
+    td,
+    th {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 5px 10px;
+        text-align: center;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div>proname: <input v-model="info.productName"></div>
+        <div>price: <input v-model="info.price"></div>
+        <div><button @click="fnUpdate()">edit</button></div>
+    </div>
+</body>
+
+</html>
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                info: {},//换掉
+                productId:""//加这个
+            };
+        },
+        methods: {
+            fnGetList() {
+                let self = this;
+                fetch("http://localhost:3005/product/"+self.productId)//换词,加这个(别忘了product后面的'/'')
+                    .then(res => res.json())
+                    .then(data => {
+                        self.info = data.info;//改
+                        self.productId=data.info.productId;
+                    })
+            },
+            
+            
+            fnUpdate:function(){
+                let self=this;
+                fetch("http://localhost:3005/product/"+self.productId,
+                    {
+                        method:"PUT",//删除改成这个
+                        headers:{
+                            "Content-type":"application/json"
+                        },
+                        body:JSON.stringify(self.info)
+                    }
+                )//换词,加这个(别忘了product后面的'/'')
+
+                    .then(res => res.json())
+                    .then(data => {
+                        alert("edited");
+                        location.href="product-list.html";
+                    })
+            }
+        },
+        mounted() {
+            var self = this;
+            const queryParams = new URLSearchParams(window.location.search);
+            this.productId = queryParams.get('productId') || '';//加上,然后把两个关键词替换好
+            // console.log(this.productId);
+            self.fnGetList();
+        }
+    });
+    app.mount('#app');
+</script>
